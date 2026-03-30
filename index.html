@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Diabetes + Blood Pressure Meal Plan 🌿</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Nunito','Segoe UI',sans-serif;background:#f5f2ea;min-height:100vh;color:#2a2a2a;overflow-x:hidden;}
+
+.hdr{background:linear-gradient(135deg,#3d6b4f 0%,#2d5040 100%);color:white;padding:20px 16px 14px;text-align:center;}
+.hdr h1{font-family:'Libre Baskerville',Georgia,serif;font-size:17px;font-weight:700;margin-bottom:4px;line-height:1.3;}
+.hdr p{font-size:11px;opacity:0.78;line-height:1.5;}
+.hdr-pills{display:flex;gap:6px;justify-content:center;margin-top:8px;flex-wrap:wrap;}
+.hdr-pill{background:rgba(255,255,255,0.18);border-radius:12px;padding:3px 10px;font-size:10px;font-weight:800;letter-spacing:0.3px;}
+
+.tabs{background:#2d5040;display:flex;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex:0 0 auto;padding:10px 10px 9px;color:rgba(255,255,255,0.6);font-size:10px;font-weight:800;cursor:pointer;border:none;border-bottom:3px solid transparent;background:none;white-space:nowrap;transition:all 0.15s;font-family:inherit;display:flex;align-items:center;gap:3px;letter-spacing:0.3px;text-transform:uppercase;}
+.tab.active{color:white;border-bottom-color:#c8915a;}
+
+.content{max-width:640px;margin:0 auto;padding:16px 12px 80px;}
+.panel{display:none;}
+.panel.active{display:block;}
+
+.sec-title{font-family:'Libre Baskerville',Georgia,serif;font-size:17px;color:#3d6b4f;margin-bottom:11px;display:flex;align-items:center;gap:7px;}
+.sec-sub{font-size:13px;color:#999;margin-bottom:13px;line-height:1.5;}
+
+.card{background:white;border-radius:14px;padding:15px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.06);border:1px solid #e8e4dc;}
+.card-title{font-weight:800;font-size:14px;color:#2d5040;margin-bottom:11px;display:flex;align-items:center;gap:6px;}
+
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:800;margin-top:5px;letter-spacing:0.3px;}
+.badge-green{background:#d4edda;color:#2e7d45;}
+.badge-amber{background:#fdf3e0;color:#b7770d;}
+.badge-red{background:#fde8e8;color:#c0392b;}
+.badge-blue{background:#e0eeff;color:#1a5fb4;}
+.badge-purple{background:#ede0ff;color:#6a1fb4;}
+
+.warn-tag{background:#fff3cd;border:1px solid #f0c060;border-radius:8px;padding:8px 11px;font-size:12px;color:#7d5a00;margin-top:6px;display:flex;gap:7px;align-items:flex-start;line-height:1.4;}
+
+.day-sel{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin-bottom:13px;padding-bottom:2px;}
+.day-sel::-webkit-scrollbar{display:none;}
+.day-btn{flex:0 0 auto;padding:7px 14px;border-radius:20px;font-size:12px;font-weight:800;cursor:pointer;border:2px solid #c8d8c0;background:white;color:#3d6b4f;font-family:inherit;transition:all 0.15s;-webkit-appearance:none;}
+.day-btn.on{background:#3d6b4f;border-color:#3d6b4f;color:white;}
+
+.pbar{background:#e8e4dc;border-radius:10px;height:8px;overflow:hidden;}
+.pfill{height:100%;background:#3d6b4f;border-radius:10px;transition:width 0.4s ease;}
+
+.meal-card{background:white;border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);border:1px solid #e8e4dc;}
+.meal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.meal-label{font-weight:800;font-size:13px;color:#2d5040;display:flex;align-items:center;gap:5px;}
+.meal-time{font-size:10px;color:#bbb;font-weight:600;}
+.meal-row{display:flex;gap:10px;align-items:flex-start;cursor:pointer;padding:4px 0;}
+.mcheck{width:24px;height:24px;min-width:24px;border:2px solid #b8d4c0;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:all 0.2s;background:white;}
+.mcheck.on{background:#3d6b4f;border-color:#3d6b4f;}
+.mcheck svg{display:none;}
+.mcheck.on svg{display:block;}
+.mname{font-weight:700;font-size:14px;line-height:1.3;transition:opacity 0.15s;}
+.mname.done{text-decoration:line-through;opacity:0.4;}
+.mnote{font-size:12px;color:#999;margin-top:3px;line-height:1.4;}
+.mbadges{display:flex;gap:5px;flex-wrap:wrap;}
+
+.tip-box{background:#f0f7f2;border-left:4px solid #3d6b4f;border-radius:0 10px 10px 0;padding:12px 14px;font-size:13px;color:#2d5040;line-height:1.6;}
+.tip-box-red{background:#fff0f0;border-left:4px solid #e07070;border-radius:0 10px 10px 0;padding:12px 14px;font-size:13px;color:#8b2222;line-height:1.6;margin-bottom:12px;}
+.tip-box-blue{background:#f0f4ff;border-left:4px solid #4a6eb5;border-radius:0 10px 10px 0;padding:12px 14px;font-size:13px;color:#1a3a6b;line-height:1.6;margin-bottom:12px;}
+
+.seg-btns{display:flex;gap:6px;margin-bottom:13px;}
+.seg-btn{flex:1;padding:8px 4px;border:2px solid #e8e4dc;border-radius:10px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit;transition:all 0.15s;background:white;color:#2a2a2a;-webkit-appearance:none;}
+.seg-btn.on{background:#3d6b4f;border-color:#3d6b4f;color:white;}
+
+.acc-hd{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#f5f2ea;border-radius:10px;cursor:pointer;margin-bottom:4px;border:1px solid #e8e4dc;transition:background 0.15s;}
+.acc-hd:active{background:#ede8dc;}
+.acc-title{font-weight:800;font-size:14px;color:#2d5040;display:flex;align-items:center;gap:7px;}
+.acc-body{display:none;background:white;border-radius:4px 4px 12px 12px;border:1px solid #e8e4dc;border-top:none;padding:13px;margin-bottom:8px;}
+.acc-body.open{display:block;}
+
+.hdr-labels{display:grid;grid-template-columns:1fr 22px 1fr;gap:4px;margin-bottom:8px;}
+.avoid-grid{display:grid;grid-template-columns:1fr 22px 1fr;gap:4px;padding:9px 0;border-bottom:1px solid #f5f2ea;}
+.avoid-grid:last-child{border-bottom:none;}
+.abadx{font-size:12.5px;color:#c0392b;font-weight:600;line-height:1.3;}
+.agood{font-size:12.5px;color:#2e7d45;font-weight:600;line-height:1.3;}
+.aarr{text-align:center;color:#c8915a;font-size:13px;}
+
+.spice-tag{display:inline-block;background:#f0f7f2;color:#2d5040;border:1px solid #b8d4c0;border-radius:16px;padding:4px 10px;font-size:12px;font-weight:600;margin:3px;}
+
+.drink-row{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid #f5f2ea;align-items:flex-start;}
+.drink-row:last-child{border-bottom:none;}
+.di{font-size:22px;width:28px;text-align:center;flex-shrink:0;}
+.dname{font-weight:700;font-size:14px;margin-bottom:2px;}
+.dnote{font-size:12px;color:#999;line-height:1.4;}
+
+.gi-block{margin-bottom:14px;}
+.gi-lbl{font-size:12px;font-weight:800;margin-bottom:4px;}
+.gi-trk{height:13px;background:#e8e4dc;border-radius:7px;overflow:hidden;margin-bottom:4px;}
+.gi-fill{height:100%;border-radius:7px;}
+.gi-ex{font-size:12px;color:#999;line-height:1.4;}
+
+.pie-wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
+.pie{width:160px;height:160px;border-radius:50%;flex-shrink:0;background:conic-gradient(#4a9e6e 0deg 180deg,#c8915a 180deg 270deg,#d4b483 270deg 360deg);border:5px solid #f5f2ea;box-shadow:0 3px 12px rgba(0,0,0,0.12);}
+.pie-legend{flex:1;min-width:150px;}
+.pie-item{display:flex;gap:9px;align-items:flex-start;margin-bottom:12px;}
+.pie-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:2px;}
+.pie-label{font-weight:800;font-size:13px;line-height:1.2;}
+.pie-ex{font-size:11px;color:#999;margin-top:2px;line-height:1.3;}
+
+.trow{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:9px 0;border-bottom:1px solid #f5f2ea;font-size:13px;}
+.trow:last-child{border-bottom:none;}
+.trow strong{color:#2d5040;}
+
+.sec-tag{background:#f0f7f2;border:1px solid #b8d4c0;border-radius:8px;padding:9px 12px;font-size:13px;margin:5px 0;display:flex;align-items:flex-start;gap:8px;color:#2d5040;line-height:1.4;}
+
+.gcat{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#c8915a;margin:16px 0 6px;}
+.gitem{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f5f2ea;cursor:pointer;}
+.gitem:last-child{border-bottom:none;}
+.gcheck{width:22px;height:22px;min-width:22px;border:2px solid #b8d4c0;border-radius:5px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.gcheck.on{background:#3d6b4f;border-color:#3d6b4f;}
+.gcheck svg{display:none;}
+.gcheck.on svg{display:block;}
+.gname{font-size:13.5px;flex:1;transition:opacity 0.15s;line-height:1.3;}
+.gname.done{text-decoration:line-through;opacity:0.45;}
+.gstore{font-size:10px;color:#c8915a;font-weight:800;text-align:right;white-space:nowrap;}
+
+.rrow{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid #f5f2ea;align-items:flex-start;}
+.rrow:last-child{border-bottom:none;}
+.rico{width:44px;height:44px;min-width:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.rname{font-weight:800;font-size:14px;margin-bottom:2px;}
+.rloc{font-size:11px;color:#999;margin-bottom:4px;}
+.rtip{font-size:12px;color:#2d5040;font-style:italic;line-height:1.4;}
+
+.alc-row{padding:10px 0;border-bottom:1px solid #f5f2ea;}
+.alc-row:last-child{border-bottom:none;}
+.alc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;}
+.alc-name{font-weight:700;font-size:14px;}
+.alc-note{font-size:12px;color:#999;}
+
+.prog-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.prog-lbl{font-weight:800;font-size:14px;}
+.prog-count{font-weight:800;color:#3d6b4f;font-size:14px;}
+.prog-win{margin-top:7px;font-size:13px;color:#3d6b4f;font-weight:700;}
+
+/* BP TAB SPECIFIC */
+.bp-hero{background:linear-gradient(135deg,#c0392b 0%,#922b21 100%);color:white;border-radius:14px;padding:18px;margin-bottom:13px;text-align:center;}
+.bp-hero h3{font-family:'Libre Baskerville',Georgia,serif;font-size:16px;margin-bottom:6px;}
+.bp-hero p{font-size:12px;opacity:0.85;line-height:1.5;}
+.bp-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px;}
+.bp-stat{background:rgba(255,255,255,0.18);border-radius:10px;padding:11px;text-align:center;}
+.bp-stat-val{font-size:20px;font-weight:800;line-height:1;}
+.bp-stat-lbl{font-size:10px;opacity:0.85;margin-top:3px;}
+.bp-overlap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.bp-overlap-card{border-radius:12px;padding:13px;}
+.overlap-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;}
+.overlap-item{font-size:12px;line-height:1.5;padding:2px 0;}
+.mineral-row{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-bottom:1px solid #f5f2ea;}
+.mineral-row:last-child{border-bottom:none;}
+.mineral-icon{font-size:22px;width:30px;text-align:center;flex-shrink:0;}
+.mineral-name{font-weight:800;font-size:14px;margin-bottom:2px;}
+.mineral-note{font-size:12px;color:#999;line-height:1.4;}
+.mineral-foods{font-size:12px;color:#2d5040;font-style:italic;margin-top:3px;}
+.sodium-meter{background:#e8e4dc;border-radius:10px;height:16px;overflow:hidden;margin:8px 0;position:relative;}
+.sodium-fill{height:100%;border-radius:10px;display:flex;align-items:center;padding-left:8px;font-size:10px;font-weight:800;color:white;}
+.changes-row{display:flex;gap:11px;padding:10px 0;border-bottom:1px solid #f5f2ea;align-items:flex-start;}
+.changes-row:last-child{border-bottom:none;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>🌿 Diabetes + Blood Pressure Meal Plan</h1>
+  <p>South African Edition · Johannesburg Northern Suburbs<br>Managing Type 2 Diabetes &amp; Hypertension Together</p>
+  <div class="hdr-pills">
+    <span class="hdr-pill">🩸 Low GI</span>
+    <span class="hdr-pill">🧂 Low Sodium</span>
+    <span class="hdr-pill">❤️ Heart Healthy</span>
+    <span class="hdr-pill">🌿 DASH Aligned</span>
+  </div>
+</div>
+
+<div class="tabs" id="tabs">
+  <button class="tab active" data-panel="meals">🍽️ Meal Plan</button>
+  <button class="tab" data-panel="bp">❤️ Blood Pressure</button>
+  <button class="tab" data-panel="avoid">🚫 Avoid &amp; Replace</button>
+  <button class="tab" data-panel="drinks">🥤 Drinks</button>
+  <button class="tab" data-panel="guide">📏 Diet Guide</button>
+  <button class="tab" data-panel="grocery">🛒 Grocery</button>
+  <button class="tab" data-panel="restaurants">🍴 Restaurants</button>
+</div>
+
+<div class="content">
+
+  <!-- ====== MEAL PLAN ====== -->
+  <div id="panel-meals" class="panel active">
+    <h2 class="sec-title">🍽️ Daily Meal Plan</h2>
+    <div class="tip-box-blue" style="margin-bottom:12px">
+      ❤️ <strong>Dual-condition plan:</strong> Every meal is optimised for both <strong>blood sugar control</strong> and <strong>blood pressure management</strong>. Sodium-adjusted, potassium-rich, low GI throughout.
+    </div>
+    <div class="day-sel" id="daySel"></div>
+    <div class="card">
+      <div class="prog-row">
+        <span class="prog-lbl">Today's Progress</span>
+        <span class="prog-count" id="progCount">0/6 meals</span>
+      </div>
+      <div class="pbar"><div class="pfill" id="progFill" style="width:0%"></div></div>
+      <div class="prog-win" id="progWin" style="display:none">🎉 All meals completed!</div>
+    </div>
+    <div id="mealsContainer"></div>
+    <div class="tip-box">💡 <strong>Remember:</strong> Eat every 3–4 hours. Pair carbs with protein or healthy fat. Keep sodium low at every meal — flavour food with herbs, lemon and spices instead of salt.</div>
+  </div>
+
+  <!-- ====== BLOOD PRESSURE ====== -->
+  <div id="panel-bp" class="panel">
+    <div class="bp-hero">
+      <h3>❤️ Blood Pressure Guide</h3>
+      <p>This plan follows DASH diet principles alongside Low GI eating. Managing both conditions together gives you powerful control over your long-term health.</p>
+      <div class="bp-stats">
+        <div class="bp-stat"><div class="bp-stat-val">&lt;1,500mg</div><div class="bp-stat-lbl">Daily sodium target</div></div>
+        <div class="bp-stat"><div class="bp-stat-val">3,500mg+</div><div class="bp-stat-lbl">Daily potassium target</div></div>
+        <div class="bp-stat"><div class="bp-stat-val">120/80</div><div class="bp-stat-lbl">Target BP (mmHg)</div></div>
+        <div class="bp-stat"><div class="bp-stat-val">0–1</div><div class="bp-stat-lbl">Alcohol units per day max</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">✅ Good News — Huge Overlap</div>
+      <p style="font-size:13px;color:#666;margin-bottom:12px;line-height:1.5">The Low GI diabetes diet and the DASH (Dietary Approaches to Stop Hypertension) diet share the same core principles. You don't need two separate diets — this single plan covers both.</p>
+      <div class="bp-overlap">
+        <div class="bp-overlap-card" style="background:#f0f7f2;border:1px solid #b8d4c0;">
+          <div class="overlap-title" style="color:#2d5040">✅ Great for Both</div>
+          <div class="overlap-item">🥦 Plenty of vegetables</div>
+          <div class="overlap-item">🫘 Beans & lentils</div>
+          <div class="overlap-item">🐟 Oily fish (omega-3)</div>
+          <div class="overlap-item">🥑 Avocado</div>
+          <div class="overlap-item">🌰 Nuts & seeds</div>
+          <div class="overlap-item">🫙 Olive oil</div>
+          <div class="overlap-item">🍓 Berries</div>
+          <div class="overlap-item">🌿 Herbs & spices</div>
+        </div>
+        <div class="bp-overlap-card" style="background:#fff3f0;border:1px solid #f0c0b0;">
+          <div class="overlap-title" style="color:#8b2222">⚠️ Extra Caution For BP</div>
+          <div class="overlap-item">🧂 Any added salt</div>
+          <div class="overlap-item">🥓 Processed meats</div>
+          <div class="overlap-item">🌭 Boerewors, wors</div>
+          <div class="overlap-item">🧀 Feta &amp; hard cheese</div>
+          <div class="overlap-item">🐟 Tuna in brine</div>
+          <div class="overlap-item">☕ More than 1 coffee</div>
+          <div class="overlap-item">🍺 Alcohol</div>
+          <div class="overlap-item">🥩 Biltong (high Na)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🧂 Understanding Your Sodium Budget</div>
+      <p style="font-size:13px;color:#999;margin-bottom:12px;line-height:1.5">Sodium causes the body to retain water, raising blood pressure. Most South Africans consume 3,000–4,000mg daily. Your target is under 1,500mg.</p>
+      <div style="margin-bottom:6px;font-size:12px;font-weight:800;color:#666">DAILY SODIUM — VISUAL COMPARISON</div>
+      <div style="font-size:12px;color:#666;margin-bottom:4px">Your target: &lt;1,500mg</div>
+      <div class="sodium-meter"><div class="sodium-fill" style="width:30%;background:#4a9e6e">✓ Target</div></div>
+      <div style="font-size:12px;color:#666;margin-bottom:4px">Average SA adult: ~3,500mg</div>
+      <div class="sodium-meter"><div class="sodium-fill" style="width:70%;background:#d4a83a">Average</div></div>
+      <div style="font-size:12px;color:#666;margin-bottom:4px">Single boerewors: ~1,200mg</div>
+      <div class="sodium-meter"><div class="sodium-fill" style="width:58%;background:#e07070">⚠️ One wors!</div></div>
+      <div class="warn-tag" style="margin-top:12px">⚠️ <span>The "silent" sodium sources in SA cooking: Aromat, Knorr stock cubes, Worcestershire sauce, soy sauce, feta, biltong, lean bacon. These are updated in this plan.</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💊 Key Minerals for Blood Pressure</div>
+      <p style="font-size:13px;color:#999;margin-bottom:10px">These three minerals work together to regulate blood pressure naturally.</p>
+
+      <div class="mineral-row">
+        <div class="mineral-icon">🍌</div>
+        <div>
+          <div class="mineral-name">Potassium — the sodium antidote</div>
+          <div class="mineral-note">Helps kidneys flush excess sodium. Most important BP mineral. Target: 3,500mg+ daily.</div>
+          <div class="mineral-foods">Best SA sources: avocado, sweet potato, spinach, beans, yogurt, banana (medium GI — limit), salmon, mushrooms</div>
+        </div>
+      </div>
+      <div class="mineral-row">
+        <div class="mineral-icon">🥦</div>
+        <div>
+          <div class="mineral-name">Magnesium — the relaxer</div>
+          <div class="mineral-note">Relaxes blood vessel walls. Deficiency is common in South Africa.</div>
+          <div class="mineral-foods">Best SA sources: dark leafy greens, almonds, pumpkin seeds, quinoa, dark chocolate (85%+), black beans</div>
+        </div>
+      </div>
+      <div class="mineral-row">
+        <div class="mineral-icon">🥛</div>
+        <div>
+          <div class="mineral-name">Calcium — blood vessel support</div>
+          <div class="mineral-note">Helps blood vessels tighten and relax properly. Works alongside magnesium.</div>
+          <div class="mineral-foods">Best SA sources: plain yogurt, low-fat cottage cheese, broccoli, kale, almonds, fortified oat/almond milk</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔄 What Changed From a Standard Diabetes Diet</div>
+      <p style="font-size:13px;color:#999;margin-bottom:10px">Specific meal changes made to this plan to protect your blood pressure:</p>
+      <div class="changes-row">
+        <div style="font-size:20px;width:30px;flex-shrink:0">🥩</div>
+        <div><div style="font-weight:700;font-size:14px;color:#c0392b">Biltong removed as snack</div><div style="font-size:12px;color:#999;margin-top:2px">Even lean biltong = ~800mg sodium per 30g serving. Replaced with low-sodium high-protein alternatives.</div></div>
+      </div>
+      <div class="changes-row">
+        <div style="font-size:20px;width:30px;flex-shrink:0">🌭</div>
+        <div><div style="font-weight:700;font-size:14px;color:#c0392b">Boerewors replaced on braai day</div><div style="font-size:12px;color:#999;margin-top:2px">One wors = ~1,200mg sodium. Replaced with chicken sosaties — flavoured with herbs, not salt.</div></div>
+      </div>
+      <div class="changes-row">
+        <div style="font-size:20px;width:30px;flex-shrink:0">🥓</div>
+        <div><div style="font-weight:700;font-size:14px;color:#c0392b">Bacon removed from Sunday fry-up</div><div style="font-size:12px;color:#999;margin-top:2px">1 rasher = ~400mg sodium. Replaced with extra grilled mushrooms and tomatoes.</div></div>
+      </div>
+      <div class="changes-row">
+        <div style="font-size:20px;width:30px;flex-shrink:0">🐟</div>
+        <div><div style="font-weight:700;font-size:14px;color:#c0392b">Tuna in brine → tuna in spring water</div><div style="font-size:12px;color:#999;margin-top:2px">Brine = very high sodium. Spring water version has 60–70% less sodium. Same protein value.</div></div>
+      </div>
+      <div class="changes-row">
+        <div style="font-size:20px;width:30px;flex-shrink:0">🧀</div>
+        <div><div style="font-weight:700;font-size:14px;color:#c0392b">Feta — use sparingly, flagged</div><div style="font-size:12px;color:#999;margin-top:2px">Feta is high in sodium. A small amount as a flavour accent is OK. Don't add extra salt to any dish containing feta.</div></div>
+      </div>
+      <div class="changes-row">
+        <div style="font-size:20px;width:30px;flex-shrink:0">☕</div>
+        <div><div style="font-weight:700;font-size:14px;color:#c0392b">Coffee limited to 1 cup max</div><div style="font-size:12px;color:#999;margin-top:2px">Caffeine can temporarily raise blood pressure. 1 cup of black coffee or flat white is fine. Rooibos is unlimited and actively beneficial.</div></div>
+      </div>
+      <div class="changes-row">
+        <div style="font-size:20px;width:30px;flex-shrink:0">🥗</div>
+        <div><div style="font-weight:700;font-size:14px;color:#c0392b">Beetroot added to grocery list & meals</div><div style="font-size:12px;color:#999;margin-top:2px">Raw beetroot contains natural nitrates that help dilate blood vessels and lower BP. A powerful SA-available superfood for hypertension.</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🫀 BP Superfoods — Prioritise These</div>
+      <p style="font-size:13px;color:#999;margin-bottom:10px">All are available in SA and compatible with low GI eating.</p>
+      <div style="display:flex;flex-wrap:wrap;">
+        <span class="spice-tag" style="background:#fde8e8;border-color:#f0b0b0;color:#8b2222">🫚 Beetroot</span>
+        <span class="spice-tag" style="background:#fde8e8;border-color:#f0b0b0;color:#8b2222">🐟 Salmon & oily fish</span>
+        <span class="spice-tag" style="background:#fde8e8;border-color:#f0b0b0;color:#8b2222">🥑 Avocado</span>
+        <span class="spice-tag" style="background:#fde8e8;border-color:#f0b0b0;color:#8b2222">🍵 Rooibos tea</span>
+        <span class="spice-tag" style="background:#fde8e8;border-color:#f0b0b0;color:#8b2222">🌰 Almonds & walnuts</span>
+        <span class="spice-tag" style="background:#fde8e8;border-color:#f0b0b0;color:#8b2222">🫘 Beans & lentils</span>
+        <span class="spice-tag" style="background:#fde8e8;border-color:#f0b0b0;color:#8b2222">🌿 Garlic</span>
+        <span class="spice-tag" style="background:#fde8e8;border-color:#f0b0b0;color:#8b2222">🫚 Olive oil</span>
+        <span class="spice-tag" style="background:#fde8e8;border-color:#f0b0b0;color:#8b2222">🥬 Spinach & kale</span>
+        <span class="spice-tag" style="background:#fde8e8;border-color:#f0b0b0;color:#8b2222">🍠 Sweet potato</span>
+        <span class="spice-tag" style="background:#fde8e8;border-color:#f0b0b0;color:#8b2222">🍫 85% Dark chocolate</span>
+        <span class="spice-tag" style="background:#fde8e8;border-color:#f0b0b0;color:#8b2222">🌱 Flaxseeds</span>
+      </div>
+    </div>
+
+    <div class="tip-box-red">
+      ⚕️ <strong>Medical note:</strong> If you are on BP medication (e.g. ACE inhibitors, beta blockers or diuretics), dietary changes can meaningfully affect how your medication works — particularly potassium-rich foods if you're on certain diuretics. Always discuss this plan with your doctor or a registered dietitian before making significant changes.
+    </div>
+  </div>
+
+  <!-- ====== AVOID & REPLACE ====== -->
+  <div id="panel-avoid" class="panel">
+    <h2 class="sec-title">🚫 What to Avoid &amp; Replace</h2>
+    <p class="sec-sub">Updated for both blood sugar and blood pressure. Sodium warnings flagged throughout.</p>
+    <div id="accordions"></div>
+    <div class="card">
+      <div class="card-title">✅ Spices &amp; Herbs You CAN Use Freely</div>
+      <p style="font-size:13px;color:#999;margin-bottom:10px">These are all safe — some actively support both blood sugar and blood pressure.</p>
+      <div id="spiceTags"></div>
+      <div class="tip-box" style="margin-top:12px">
+        🩺 <strong>Cinnamon</strong> may improve insulin sensitivity — add ½ tsp to oats daily.<br>
+        🌿 <strong>Turmeric</strong> — anti-inflammatory, supports both conditions.<br>
+        🧄 <strong>Garlic</strong> — clinically shown to support healthy blood pressure. Use generously.
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== DRINKS ====== -->
+  <div id="panel-drinks" class="panel">
+    <h2 class="sec-title">🥤 Drinks Guide</h2>
+    <div class="seg-btns">
+      <button class="seg-btn on" data-dsec="good">✅ Good Choices</button>
+      <button class="seg-btn" data-dsec="avoid">🚫 Avoid</button>
+      <button class="seg-btn" data-dsec="alcohol">🍷 Alcohol</button>
+    </div>
+    <div id="drinkPanelGood" class="card"></div>
+    <div id="drinkPanelAvoid" class="card" style="display:none"></div>
+    <div id="drinkPanelAlcohol" style="display:none"></div>
+  </div>
+
+  <!-- ====== DIET GUIDE ====== -->
+  <div id="panel-guide" class="panel">
+    <h2 class="sec-title">📏 Dietary Guide</h2>
+    <div class="card">
+      <div class="card-title">🍽️ The Diabetes Plate Method</div>
+      <p style="font-size:13px;color:#999;margin-bottom:14px">Apply this to every main meal — no calorie counting needed.</p>
+      <div class="pie-wrap">
+        <div class="pie"></div>
+        <div class="pie-legend">
+          <div class="pie-item"><div class="pie-dot" style="background:#4a9e6e"></div><div><div class="pie-label">50% — Non-starchy Veg</div><div class="pie-ex">Broccoli, spinach, peppers, cucumber, tomatoes, cauliflower, courgettes, mushrooms, beetroot</div></div></div>
+          <div class="pie-item"><div class="pie-dot" style="background:#c8915a"></div><div><div class="pie-label">25% — Lean Protein</div><div class="pie-ex">Chicken, fish, eggs, lentils, beans, lean beef, tofu</div></div></div>
+          <div class="pie-item"><div class="pie-dot" style="background:#d4b483"></div><div><div class="pie-label">25% — Complex Carbs</div><div class="pie-ex">Brown rice, quinoa, sweet potato, Low GI bread, oats</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 Glycemic Index (GI) Guide</div>
+      <p style="font-size:13px;color:#999;margin-bottom:13px">GI measures how fast a food raises blood sugar. Build meals around Low GI foods.</p>
+      <div class="gi-block">
+        <div class="gi-lbl" style="color:#4a9e6e">Low GI (&lt;55) — Best Choice</div>
+        <div class="gi-trk"><div class="gi-fill" style="width:36%;background:#4a9e6e"></div></div>
+        <div class="gi-ex">Oats, lentils, beans, berries, apple, pear, sweet potato, yogurt, quinoa, Low GI bread</div>
+      </div>
+      <div class="gi-block">
+        <div class="gi-lbl" style="color:#d4a83a">Medium GI (56–69) — Use Moderately</div>
+        <div class="gi-trk"><div class="gi-fill" style="width:63%;background:#d4a83a"></div></div>
+        <div class="gi-ex">Brown basmati rice, whole wheat bread, couscous, new potatoes, banana, pineapple</div>
+      </div>
+      <div class="gi-block">
+        <div class="gi-lbl" style="color:#e07070">High GI (70+) — Limit / Avoid</div>
+        <div class="gi-trk"><div class="gi-fill" style="width:100%;background:#e07070"></div></div>
+        <div class="gi-ex">White bread, white rice, pap, watermelon, chips, crackers, most breakfast cereals</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🔢 Daily Carbohydrate Targets</div>
+      <p style="font-size:13px;color:#999;margin-bottom:10px">General guidelines — confirm with your dietitian or doctor.</p>
+      <div class="trow"><div>Main meals (women)</div><div><strong>45–60g carbs per meal</strong></div></div>
+      <div class="trow"><div>Main meals (men)</div><div><strong>60–75g carbs per meal</strong></div></div>
+      <div class="trow"><div>Snacks</div><div><strong>15–20g carbs per snack</strong></div></div>
+      <div class="trow"><div>Daily total (women)</div><div><strong>~150–200g</strong></div></div>
+      <div class="trow"><div>Daily total (men)</div><div><strong>~200–250g</strong></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">⚖️ Portion Size Reference</div>
+      <p style="font-size:13px;color:#999;margin-bottom:10px">1 carbohydrate serving = 15g of carbohydrates.</p>
+      <div class="trow"><div style="color:#2d5040;font-weight:700">Cooked brown rice</div><div>½ cup (90g) = 1 carb serving</div></div>
+      <div class="trow"><div style="color:#2d5040;font-weight:700">Whole wheat bread</div><div>1 slice = 1 carb serving (15g)</div></div>
+      <div class="trow"><div style="color:#2d5040;font-weight:700">Cooked pasta</div><div>⅓ cup (75g) = 1 serving</div></div>
+      <div class="trow"><div style="color:#2d5040;font-weight:700">Sweet potato</div><div>Small (100g) = 1.3 servings</div></div>
+      <div class="trow"><div style="color:#2d5040;font-weight:700">Cooked oats</div><div>½ cup = 1 carb serving</div></div>
+      <div class="trow"><div style="color:#2d5040;font-weight:700">Fresh fruit</div><div>Small piece or ½ cup = 1 serving</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">⏰ Meal Timing Principles</div>
+      <div class="sec-tag"><span>✓</span><span>Eat every 3–4 hours — never skip meals</span></div>
+      <div class="sec-tag"><span>✓</span><span>Keep meal times consistent each day</span></div>
+      <div class="sec-tag"><span>✓</span><span>Largest meal at lunch — lighter dinner</span></div>
+      <div class="sec-tag"><span>✓</span><span>Avoid eating within 2 hours of bedtime</span></div>
+      <div class="sec-tag"><span>✓</span><span>Always pair carbs with protein or healthy fat</span></div>
+      <div class="sec-tag"><span>✓</span><span>Monitor blood sugar 1–2 hours after meals</span></div>
+    </div>
+    <div class="tip-box">⚕️ <strong>Important:</strong> This is general guidance only. Always work with a registered dietitian and your doctor to personalise your plan based on your medications, HbA1c targets and blood pressure readings.</div>
+  </div>
+
+  <!-- ====== GROCERY ====== -->
+  <div id="panel-grocery" class="panel">
+    <h2 class="sec-title">🛒 Grocery List</h2>
+    <div class="card">
+      <div class="prog-row">
+        <span class="prog-lbl">Shopping Progress</span>
+        <span class="prog-count" id="grocCount">0/0 items</span>
+      </div>
+      <div class="pbar"><div class="pfill" id="grocFill" style="width:0%"></div></div>
+    </div>
+    <div class="card">
+      <p style="font-size:12px;color:#999;margin-bottom:4px">🏪 Available at: <strong>Woolworths · Pick n Pay · Checkers · Spar · Dis-Chem</strong></p>
+      <div id="groceryList"></div>
+    </div>
+  </div>
+
+  <!-- ====== RESTAURANTS ====== -->
+  <div id="panel-restaurants" class="panel">
+    <h2 class="sec-title">🍴 Eating Out — Northern Joburg</h2>
+    <p class="sec-sub">Diabetes &amp; blood pressure-friendly options across Sandton, Fourways, Bryanston &amp; surrounds.</p>
+    <div class="card" id="restaurantList"></div>
+    <div class="card" style="margin-top:12px">
+      <div class="card-title">💡 Eating Out Tips — Both Conditions</div>
+      <div class="sec-tag"><span>✓</span><span>Ask for all dressings and sauces on the side</span></div>
+      <div class="sec-tag"><span>✓</span><span>Choose grilled, baked or steamed — never fried</span></div>
+      <div class="sec-tag"><span>✓</span><span>Ask the waiter: "Can you prepare this with no added salt?"</span></div>
+      <div class="sec-tag"><span>✓</span><span>Request extra vegetables instead of chips or fries</span></div>
+      <div class="sec-tag"><span>✓</span><span>Politely ask to remove the bread basket</span></div>
+      <div class="sec-tag"><span>✓</span><span>Drink water, sparkling water or rooibos tea</span></div>
+      <div class="sec-tag"><span>✓</span><span>Avoid buffets — very difficult to control portions and sodium</span></div>
+      <div class="sec-tag"><span>✓</span><span>Don't arrive hungry — have a small snack beforehand</span></div>
+      <div class="sec-tag"><span>✓</span><span>Avoid pre-made sauces and gravies — often very high in sodium</span></div>
+    </div>
+    <div class="tip-box" style="margin-top:12px">🛑 <strong>Key question for waiters:</strong> "How is this prepared, and can you hold the salt and serve any sauce on the side?" Most quality restaurants in Northern Joburg are happy to accommodate — just ask.</div>
+  </div>
+
+</div>
+
+<script>
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const MEAL_META = [
+  {key:'breakfast',     label:'Breakfast',        icon:'🌅', time:'7:00 – 8:00 AM'},
+  {key:'morningSnack',  label:'Morning Snack',    icon:'🍎', time:'10:00 – 10:30 AM'},
+  {key:'lunch',         label:'Lunch',             icon:'☀️', time:'12:30 – 1:30 PM'},
+  {key:'afternoonSnack',label:'Afternoon Snack',  icon:'🥜', time:'3:30 – 4:00 PM'},
+  {key:'dinner',        label:'Dinner',            icon:'🌙', time:'6:30 – 7:30 PM'},
+  {key:'treat',         label:'Daily Treat',       icon:'✨', time:'After dinner'},
+];
+
+// gi: Low / Med | bp: good / caution
+const PLAN = {
+  Mon:{
+    breakfast:    {name:'Jungle Oats with cinnamon, blueberries & walnuts',note:'Use Stevia — no sugar. Walnuts add magnesium & healthy fats for BP.',gi:'Low',bp:'good'},
+    morningSnack: {name:'Handful of almonds (±15) + pear',note:'Unsalted almonds. Almonds are rich in magnesium — great for blood pressure.',gi:'Low',bp:'good'},
+    lunch:        {name:'Grilled chicken salad with beetroot & avocado',note:'Leafy greens, cherry tomatoes, cucumber, sliced beetroot. Olive oil + lemon dressing. No salt.',gi:'Low',bp:'good'},
+    afternoonSnack:{name:'Baby carrots with hummus',note:'2–3 tbsp hummus. Carrots are a good potassium source.',gi:'Low',bp:'good'},
+    dinner:       {name:'Grilled hake with roasted vegetables',note:'Broccoli, peppers, courgettes + small sweet potato. Lemon & herb seasoning. No added salt.',gi:'Low',bp:'good'},
+    treat:        {name:'2 blocks 85% dark chocolate',note:'Lindt 85% or Woolworths range. Dark chocolate contains magnesium — beneficial for BP.',gi:'Low',bp:'good'},
+  },
+  Tue:{
+    breakfast:    {name:'2 scrambled eggs + Low GI toast + ½ avocado',note:'Sasko or Albany Low GI bread. Avocado is rich in potassium — excellent for BP.',gi:'Low',bp:'good'},
+    morningSnack: {name:'Plain Greek yogurt with chia seeds',note:'Woolworths or Clover plain yogurt. Yogurt provides calcium, which supports healthy blood pressure.',gi:'Low',bp:'good'},
+    lunch:        {name:'Red lentil & vegetable soup',note:'Cook with garlic and turmeric. Use Ina Paarman low-sodium stock or homemade. 1 slice whole wheat bread.',gi:'Low',bp:'good'},
+    afternoonSnack:{name:'Hard-boiled egg + celery sticks',note:'Celery contains natural compounds (phthalides) that may help lower blood pressure. No salt on egg.',gi:'Low',bp:'good'},
+    dinner:       {name:'Chicken stir-fry with cauliflower rice',note:'Courgettes, peppers. Use coconut aminos instead of soy sauce — significantly lower sodium.',gi:'Low',bp:'good'},
+    treat:        {name:'Chia pudding with unsweetened almond milk',note:'Prep overnight. Add cinnamon and fresh berries. Chia seeds are rich in omega-3 and magnesium.',gi:'Low',bp:'good'},
+  },
+  Wed:{
+    breakfast:    {name:'Ryvita with cottage cheese & cucumber',note:'2–3 crackers. Lancewood low-fat cottage cheese — good calcium source for BP.',gi:'Low',bp:'good'},
+    morningSnack: {name:'Small handful pumpkin seeds + apple',note:'Pumpkin seeds are excellent for magnesium and BP management. Unsalted only.',gi:'Low',bp:'good'},
+    lunch:        {name:'Tuna in spring water on Provita with avocado',note:'★ Spring water, NOT brine — much lower sodium. 2 tbsp mashed avocado. Squeeze lemon.',gi:'Low',bp:'good'},
+    afternoonSnack:{name:'Small handful mixed seeds',note:'Sunflower, pumpkin & sesame — all unsalted. Rich in magnesium and healthy fats.',gi:'Low',bp:'good'},
+    dinner:       {name:'Grilled salmon with asparagus & quinoa',note:'½ cup cooked quinoa. Salmon is rich in omega-3 fatty acids, which actively lower blood pressure.',gi:'Low',bp:'good'},
+    treat:        {name:'Frozen banana "nice cream"',note:'Blend 1 frozen banana + splash oat milk. Banana adds potassium — moderate GI, keep to small portion.',gi:'Med',bp:'good'},
+  },
+  Thu:{
+    breakfast:    {name:'Green smoothie: spinach, ½ apple, ginger, oat milk',note:'Add 1 tbsp flaxseeds. Spinach is high in potassium and magnesium — a BP powerhouse.',gi:'Low',bp:'good'},
+    morningSnack: {name:'Pear + low-fat cottage cheese',note:'Lancewood cottage cheese. Much lower sodium than feta or hard cheese.',gi:'Low',bp:'good'},
+    lunch:        {name:'Bean salad with boiled eggs & roasted beetroot',note:'Kidney + butter beans, cherry tomatoes, onion, olive oil. Beetroot contains nitrates that dilate blood vessels.',gi:'Low',bp:'good'},
+    afternoonSnack:{name:'Rice cakes with almond butter',note:'2 rice cakes. 1 tbsp almond butter — no added salt or sugar. Good magnesium hit.',gi:'Med',bp:'good'},
+    dinner:       {name:'Lamb stew with chickpeas & butternut',note:'Lean lamb cuts. Use low-sodium stock and herbs generously. Small butternut portion.',gi:'Low',bp:'good'},
+    treat:        {name:'1–2 Medjool dates stuffed with almond butter',note:'Sweet treat — strict moderation. Dates contain potassium.',gi:'Med',bp:'good'},
+  },
+  Fri:{
+    breakfast:    {name:'Yogurt bowl with fresh strawberries & pecans',note:'Plain Greek yogurt. Strawberries are rich in antioxidants and potassium.',gi:'Low',bp:'good'},
+    morningSnack: {name:'Apple + 12 raw almonds',note:'Unsalted. Almonds are one of the best magnesium sources available at SA stores.',gi:'Low',bp:'good'},
+    lunch:        {name:'Grilled chicken wrap (Low GI tortilla)',note:'Woolworths Low GI wrap. Lettuce, avocado, tomato, fresh chilli. No sauce, no added salt.',gi:'Low',bp:'good'},
+    afternoonSnack:{name:'½ cup steamed edamame',note:'No added salt. Edamame is high in potassium and magnesium — excellent for both conditions.',gi:'Low',bp:'good'},
+    dinner:       {name:'Pan-fried yellowtail with green bean stir-fry',note:'Olive oil, garlic, lemon. Serve with ½ cup brown rice. Season with herbs — no added salt.',gi:'Low',bp:'good'},
+    treat:        {name:'Woolworths sugar-free jelly',note:'Add a tablespoon of plain Greek yogurt on top.',gi:'Low',bp:'good'},
+  },
+  Sat:{
+    breakfast:    {name:'Poached eggs on rye with avocado & smoked salmon',note:'Small portion of smoked salmon (sodium — limit to 2–3 slices). Avocado for potassium.',gi:'Low',bp:'caution'},
+    morningSnack: {name:'Homemade trail mix',note:'Almonds, walnuts, sunflower seeds, unsweetened dried cranberries. All unsalted.',gi:'Low',bp:'good'},
+    lunch:        {name:'Greek salad with grilled chicken (light feta)',note:'Small amount of feta as flavour accent only. Do NOT add extra salt to this dish.',gi:'Low',bp:'caution'},
+    afternoonSnack:{name:'Woolworths hummus with vegetable sticks',note:'Celery, carrot, cucumber & pepper strips. Natural potassium in all vegetables.',gi:'Low',bp:'good'},
+    dinner:       {name:'Braai: grilled chicken + chicken sosaties + large salad',note:'★ Sosaties replace boerewors — herb marinade, not salt-based. Skip the pap. Extra grilled veg.',gi:'Low',bp:'good'},
+    treat:        {name:'2 blocks dark chocolate + rooibos tea',note:'Perfect wind-down. Rooibos is caffeine-free and beneficial for BP.',gi:'Low',bp:'good'},
+  },
+  Sun:{
+    breakfast:    {name:'Healthy fry-up: eggs, mushrooms, grilled tomatoes, Low GI toast',note:'★ No bacon — replaced with extra mushrooms & grilled tomato. Mushrooms add potassium. No added salt.',gi:'Low',bp:'good'},
+    morningSnack: {name:'Fresh fruit platter',note:'Berries, kiwi, pear. Avoid mango & grapes — high GI. Kiwi is excellent for potassium.',gi:'Low',bp:'good'},
+    lunch:        {name:'Roast chicken with roasted veg, beetroot & sweet potato',note:'Remove skin. Rosemary + garlic seasoning — no salt rub. Include roasted beetroot.',gi:'Low',bp:'good'},
+    afternoonSnack:{name:'Celery with peanut butter',note:'2 tbsp peanut butter — no added salt or sugar (Woolworths Natural or Faithful to Nature).',gi:'Low',bp:'good'},
+    dinner:       {name:'Leftover roast chicken & legume salad',note:'Use Sunday leftovers. Add chickpeas or lentils. Olive oil + lemon dressing.',gi:'Low',bp:'good'},
+    treat:        {name:'Homemade energy balls (oats + dates + cocoa)',note:'1–2 only. No added sugar or salt. Freeze and portion carefully.',gi:'Med',bp:'good'},
+  },
+};
+
+const AVOID_DATA = {
+  'Carbs & Starches 🌾':[
+    {bad:'White bread',good:'Sasko/Albany Low GI, rye or seed bread'},
+    {bad:'White rice',good:'Brown rice, quinoa, cauliflower rice'},
+    {bad:'Regular pasta',good:'Whole wheat pasta or zucchini noodles'},
+    {bad:'Pap / mieliepap',good:'Cauliflower mash or small samp (rarely)'},
+    {bad:'Vetkoek',good:'Baked oat muffins (no added sugar or salt)'},
+    {bad:'Koeksisters',good:'1–2 Medjool dates (strict moderation)'},
+    {bad:'Chips / white potato',good:'Baked sweet potato (small portion)'},
+  ],
+  'Sugar & Treats 🍬':[
+    {bad:'White or brown sugar',good:'Stevia or xylitol (small amounts)'},
+    {bad:'Honey',good:'Stevia or cinnamon for natural sweetness'},
+    {bad:'Jam / preserves',good:'Fresh sliced fruit instead'},
+    {bad:'Regular cooldrinks',good:'Sparkling water with fresh lemon'},
+    {bad:'Fruit juice (all types)',good:'Whole fruit — eat it, don\'t drink it'},
+    {bad:'Sweets, lollies, toffees',good:'2 blocks 85%+ dark chocolate'},
+    {bad:'Ice cream',good:'Frozen banana nice cream or plain yogurt'},
+  ],
+  'High-Sodium Foods 🧂 ← KEY for BP':[
+    {bad:'Aromat (MSG & very high sodium)',good:'Herbamere or herb blends (no salt)'},
+    {bad:'Knorr / Oxo / Royco stock cubes',good:'Ina Paarman low-sodium stock or bone broth'},
+    {bad:'Biltong (any type)',good:'Hard-boiled egg, cottage cheese, edamame'},
+    {bad:'Boerewors / russians',good:'Herb-marinated chicken sosaties on braai'},
+    {bad:'Lean bacon & processed meats',good:'Extra mushrooms, grilled tomato, smoked salmon (limited)'},
+    {bad:'Tuna in brine',good:'Tuna in spring water or olive oil — same protein'},
+    {bad:'Feta cheese (large amounts)',good:'Small amount as flavour accent only — no added salt'},
+    {bad:'Soy sauce (regular)',good:'Coconut aminos or low-sodium soy (used sparingly)'},
+    {bad:'Table salt',good:'Himalayan salt (sparingly), lemon juice, herbs'},
+  ],
+  'Condiments & Sauces 🥫':[
+    {bad:'Tomato sauce / ketchup',good:'Passata (no sugar, no salt) or fresh tomatoes'},
+    {bad:'Sweet chilli sauce',good:'Fresh chilli + apple cider vinegar'},
+    {bad:'Commercial mayonnaise',good:'Greek yogurt dressing or mashed avocado'},
+    {bad:'Bottled salad dressings',good:'Olive oil + lemon juice + fresh herbs'},
+    {bad:'HP Sauce / Worcestershire',good:'Dijon or whole grain mustard (low-sodium)'},
+    {bad:'Peri-peri sauce (sweetened)',good:'Fresh chilli + garlic + lemon marinade'},
+    {bad:'Braai spice blends (high salt)',good:'Herb rub: rosemary, thyme, garlic, paprika'},
+  ],
+};
+
+const GOOD_SPICES = ['Cinnamon 🩺','Turmeric 🌿','Fresh garlic 🧄','Fresh ginger','Cumin','Ground coriander','Rosemary','Thyme','Basil','Oregano','Black pepper','Smoked paprika (plain)','Fresh chilli','Bay leaves','Fenugreek','Cardamom','Lemon zest'];
+
+const DRINKS_GOOD = [
+  {icon:'💧',name:'Water',note:'Primary drink. Aim for 8+ glasses daily. Add lemon slice or mint for flavour.'},
+  {icon:'🍵',name:'Rooibos Tea (unsweetened)',note:'★ Outstanding for BOTH conditions. Antioxidant-rich, caffeine-free, supports healthy BP. Drink freely.'},
+  {icon:'🍃',name:'Green Tea',note:'Unsweetened only. Modest evidence for blood pressure support. 2 cups per day is good.'},
+  {icon:'☕',name:'Black Coffee (1 cup max)',note:'⚠️ Limit to 1 cup/day for BP. Caffeine temporarily raises blood pressure. Flat white with almond milk OK.'},
+  {icon:'🌿',name:'Herbal Teas',note:'Peppermint, chamomile, ginger, hibiscus tea. Hibiscus in particular has evidence for lowering BP.'},
+  {icon:'🫧',name:'Sparkling Water',note:'Plain or naturally flavoured. Woolworths, Valpré, Evian. Add lemon for flavour.'},
+  {icon:'🥒',name:'Infused Water',note:'Cucumber + mint, lemon + ginger, strawberry + basil. Make at home in a jug overnight.'},
+];
+
+const DRINKS_AVOID = [
+  {icon:'🥤',name:'Coke, Sprite, Fanta',note:'Even 1 can = 40g+ sugar. Diet versions are not ideal — confuse appetite signals.'},
+  {icon:'🍊',name:'Fruit Juice (all types)',note:'Even "100% real" juice is stripped of fibre. Same sugar hit as a cooldrink. Eat the whole fruit.'},
+  {icon:'⚡',name:'Energy Drinks',note:'Red Bull, Monster, Reload — extremely high in sugar and stimulants. Raise both blood sugar and BP.'},
+  {icon:'☕',name:'More than 1 coffee / Lattes & Frappes',note:'Extra caffeine raises BP. Flavoured syrups add sugar. Limit strictly.'},
+  {icon:'🍺',name:'Beer',note:'High GI, high carbs, and alcohol raises blood pressure. Avoid regular and craft beers.'},
+  {icon:'🍹',name:'Sweet Cocktails & Ciders',note:'Margaritas, daiquiris, Savanna, Flying Fish — very high in sugar and raise BP.'},
+  {icon:'🍫',name:'Flavoured Milk (Nesquik)',note:'High sugar. Switch to plain low-fat milk or unsweetened plant milk instead.'},
+  {icon:'🧃',name:'Commercial Smoothies',note:'Store-bought smoothies are often very high in sugar. Always make your own.'},
+];
+
+const ALCOHOL_ITEMS = [
+  {name:'Dry red wine',rating:'⚠️ Occasionally',note:'1 small glass (125ml) maximum. Alcohol raises BP — keep very occasional.',good:true},
+  {name:'Clear spirits + sparkling water',rating:'⚠️ Occasionally',note:'Gin & soda, whisky & soda. 1 unit max. No sweet mixer.',good:true},
+  {name:'Beer (any type)',rating:'🚫 Avoid',note:'High GI, high carbs. Alcohol raises blood pressure particularly with beer.',good:false},
+  {name:'Sweet / dessert wine',rating:'🚫 Avoid',note:'Very high sugar content.',good:false},
+  {name:'Ciders, Savanna, RTDs',rating:'🚫 Avoid',note:'Extremely high in sugar and raise BP.',good:false},
+  {name:'Sweet cocktails',rating:'🚫 Avoid',note:'Margaritas, mojitos, daiquiris — all very high sugar.',good:false},
+];
+const ALCOHOL_NOTE = 'Alcohol raises blood pressure even in moderate amounts. If you choose to drink: Maximum 1 unit occasionally, always with food. Monitor BP before and after. Dry red wine (125ml) is the least harmful option if you choose to drink.';
+
+const GROCERY_DATA = {
+  'Fresh Produce':[
+    {n:'Broccoli & cauliflower',s:'Any'},
+    {n:'Baby spinach & kale (potassium-rich)',s:'Any'},
+    {n:'Bell peppers (mixed colours)',s:'Any'},
+    {n:'Courgettes (baby marrows)',s:'Any'},
+    {n:'Cherry tomatoes',s:'Any'},
+    {n:'Cucumber & celery',s:'Any'},
+    {n:'Avocados (potassium + healthy fats)',s:'Any'},
+    {n:'Sweet potatoes (potassium-rich)',s:'Any'},
+    {n:'Butternut',s:'Any'},
+    {n:'Mushrooms (potassium)',s:'Any'},
+    {n:'Green beans',s:'Any'},
+    {n:'Fresh garlic & ginger (BP-active)',s:'Any'},
+    {n:'Beetroot — raw or vacuum-packed ★',s:'Woolworths / Any'},
+    {n:'Lemons & limes',s:'Any'},
+    {n:'Blueberries / strawberries',s:'Woolworths / PnP'},
+    {n:'Apples, pears & kiwi fruit',s:'Any'},
+  ],
+  'Protein (Low-Sodium Focus)':[
+    {n:'Skinless chicken breasts',s:'Any'},
+    {n:'Hake or yellowtail fillets',s:'Woolworths / PnP'},
+    {n:'Salmon — fresh or frozen ★',s:'Woolworths / Checkers'},
+    {n:'Tuna IN SPRING WATER (not brine) ★',s:'Any'},
+    {n:'Free-range eggs',s:'Any'},
+    {n:'Lean beef mince (unseasoned)',s:'Woolworths / PnP'},
+    {n:'Red & green lentils (dried or tinned)',s:'Any'},
+    {n:'Chickpeas, kidney & butter beans',s:'Any'},
+    {n:'Edamame beans — frozen ★',s:'Woolworths'},
+    {n:'Unsalted raw almonds & walnuts',s:'Dis-Chem / Woolworths'},
+  ],
+  'Dairy & Alternatives':[
+    {n:'Plain Greek / double-cream yogurt',s:'Woolworths / Clover'},
+    {n:'Low-fat cottage cheese (lower sodium than feta)',s:'Lancewood / Woolworths'},
+    {n:'Feta — small quantity only (high sodium)',s:'Any'},
+    {n:'Unsweetened almond milk (fortified)',s:'Woolworths / PnP / Checkers'},
+    {n:'Unsweetened oat milk',s:'Woolworths / PnP'},
+  ],
+  'Grains & Pantry':[
+    {n:'Jungle Oats — regular (NOT instant)',s:'Any'},
+    {n:'Brown rice',s:'Any'},
+    {n:'Quinoa (magnesium-rich) ★',s:'Woolworths / PnP / Checkers'},
+    {n:'Whole wheat pasta',s:'Any'},
+    {n:'Sasko or Albany Low GI bread',s:'Any'},
+    {n:'Ryvita or Provita crackers',s:'Any'},
+    {n:'Chia seeds & ground flaxseeds ★',s:'Dis-Chem / Woolworths'},
+    {n:'Pumpkin seeds — unsalted ★',s:'Dis-Chem / Woolworths'},
+    {n:'Almond butter (no added sugar or salt)',s:'Woolworths / Dis-Chem'},
+    {n:'Extra virgin olive oil',s:'Any'},
+    {n:'Apple cider vinegar',s:'Any'},
+  ],
+  'Condiments & Flavourings (Low Sodium)':[
+    {n:'Coconut aminos ★ (replaces soy sauce)',s:'Dis-Chem / Woolworths / Faithful to Nature'},
+    {n:'Low-sodium soy sauce (use sparingly)',s:'Woolworths / Checkers'},
+    {n:'Passata — no added salt or sugar',s:'Any'},
+    {n:'Dijon or whole grain mustard',s:'Any'},
+    {n:'Ina Paarman low-sodium stock ★',s:'Any'},
+    {n:'Stevia or xylitol',s:'Dis-Chem / Woolworths'},
+    {n:'Cinnamon (ground)',s:'Any'},
+    {n:'Turmeric, cumin, coriander, paprika',s:'Any'},
+    {n:'Herbamere herb salt ★',s:'Dis-Chem / Woolworths'},
+    {n:'Himalayan pink salt (use sparingly)',s:'Any / Dis-Chem'},
+  ],
+  'Treats & Extras':[
+    {n:'Lindt 85% or 90% dark chocolate ★',s:'Woolworths / PnP / Checkers'},
+    {n:'Medjool dates (small pack)',s:'Woolworths / PnP'},
+    {n:'Woolworths sugar-free jelly',s:'Woolworths'},
+    {n:'Rooibos teabags (Freshpak / Laager) ★',s:'Any'},
+    {n:'Hibiscus tea ★ (BP support)',s:'Dis-Chem / Woolworths / health stores'},
+  ],
+};
+
+const RESTAURANTS_DATA = [
+  {icon:'🥗',name:'Kauai',loc:'Sandton City, Fourways Mall, Nicolway',col:'#d4edda',tip:'★ Top choice. Protein bowls, salads, transparency on ingredients. Ask for no sweetener in drinks and no added salt.'},
+  {icon:'🐟',name:'Ocean Basket',loc:'Fourways, Sandton, Cresta',col:'#e0eeff',tip:'Best for grilled/baked fish. Side salad instead of chips. Ask: "no added salt, lemon butter on the side." Excellent for BP.'},
+  {icon:'🥩',name:'Nikos Greek Restaurant',loc:'Fourways',col:'#fdf3e0',tip:'Great grilled protein. Ask for tzatziki instead of sauces. Avoid the pita. Ask for no salt on the grill — herbs only.'},
+  {icon:'🍳',name:'Tashas',loc:'Sandton, Illovo, Fourways, Atholl',col:'#fde8e8',tip:'Fresh salads and grilled protein. Dressings on the side always. Ask kitchen to prepare with no added salt.'},
+  {icon:'🏪',name:'Woolworths Café',loc:'Various Northern suburbs stores',col:'#f0f7f2',tip:'★ Most trusted. Low GI products clearly labelled. Lower sodium options available. Controlled portions.'},
+  {icon:'🌿',name:'Salvation Café',loc:'Bryanston',col:'#d4edda',tip:'Health-conscious menu. Good vegetarian choices. Staff are knowledgeable about dietary requirements — ask them.'},
+  {icon:'☕',name:'Mugg & Bean',loc:'Various Northern suburbs',col:'#fdf3e0',tip:'Grilled chicken or fish with garden salad. No croutons. Dressing on the side. 1 black coffee max.'},
+  {icon:'🥙',name:'The Pantry — Fourways',loc:'Fourways',col:'#e0eeff',tip:'Fresh, made-to-order. Good grain bowls and salads. Ask specifically about sodium in their sauces.'},
+  {icon:'🔥',name:'Mythos Greek Restaurant',loc:'Various Northern suburbs',col:'#fdf3e0',tip:'Grilled meats and fish. Greek salad (light on feta). Skip flatbreads. Ask for herb-seasoned — no salt.'},
+  {icon:'🍗',name:'Spur Steak Ranches',loc:'Various Northern suburbs',col:'#fde8e8',tip:'Lean grilled steak or chicken, garden salad, no fries. Ask for your protein to be cooked with no seasoning salt — herbs only.'},
+];
+
+const TICK_SVG = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9.5 10,2.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+const state = { currentDay:'Mon', mealChecked:{}, grocChecked:{} };
+
+// TAB SWITCHING
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const panel = btn.dataset.panel;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + panel).classList.add('active');
+  });
+});
+
+// MEALS
+function buildDaySel() {
+  const sel = document.getElementById('daySel');
+  DAYS.forEach(d => {
+    const btn = document.createElement('button');
+    btn.className = 'day-btn' + (d === state.currentDay ? ' on' : '');
+    btn.textContent = d;
+    btn.onclick = () => { state.currentDay = d; renderMeals(); };
+    sel.appendChild(btn);
+  });
+}
+
+function renderMeals() {
+  document.querySelectorAll('.day-btn').forEach((btn, i) => {
+    btn.className = 'day-btn' + (DAYS[i] === state.currentDay ? ' on' : '');
+  });
+  const container = document.getElementById('mealsContainer');
+  container.innerHTML = '';
+  const day = state.currentDay;
+  const plan = PLAN[day];
+  let done = 0;
+  MEAL_META.forEach(meta => {
+    const meal = plan[meta.key];
+    const ck = day + '-' + meta.key;
+    const isOn = !!state.mealChecked[ck];
+    if (isOn) done++;
+    const bpBadge = meal.bp === 'good'
+      ? `<span class="badge badge-purple">❤️ BP-Friendly</span>`
+      : `<span class="badge badge-amber">⚠️ Moderate — Note Sodium</span>`;
+    const giBadge = meal.gi === 'Low'
+      ? `<span class="badge badge-green">✅ Low GI</span>`
+      : `<span class="badge badge-amber">⚠️ Medium GI</span>`;
+    const div = document.createElement('div');
+    div.className = 'meal-card';
+    div.innerHTML = `
+      <div class="meal-header">
+        <div class="meal-label">${meta.icon} ${meta.label}</div>
+        <div class="meal-time">${meta.time}</div>
+      </div>
+      <div class="meal-row" onclick="toggleMeal('${ck}')">
+        <div class="mcheck${isOn?' on':''}" id="mc-${ck}">${isOn?TICK_SVG:''}</div>
+        <div style="flex:1">
+          <div class="mname${isOn?' done':''}" id="mn-${ck}">${meal.name}</div>
+          <div class="mnote">${meal.note}</div>
+          <div class="mbadges">${giBadge}${bpBadge}</div>
+        </div>
+      </div>`;
+    container.appendChild(div);
+  });
+  updateMealProgress(done);
+}
+
+window.toggleMeal = function(ck) {
+  state.mealChecked[ck] = !state.mealChecked[ck];
+  const isOn = state.mealChecked[ck];
+  const mc = document.getElementById('mc-'+ck);
+  const mn = document.getElementById('mn-'+ck);
+  if(mc){mc.className='mcheck'+(isOn?' on':'');mc.innerHTML=isOn?TICK_SVG:'';}
+  if(mn){mn.className='mname'+(isOn?' done':'');}
+  let done=0;
+  MEAL_META.forEach(m=>{if(state.mealChecked[state.currentDay+'-'+m.key])done++;});
+  updateMealProgress(done);
+};
+
+function updateMealProgress(done) {
+  const total = MEAL_META.length;
+  document.getElementById('progCount').textContent = done+'/'+total+' meals';
+  document.getElementById('progFill').style.width = Math.round((done/total)*100)+'%';
+  const win = document.getElementById('progWin');
+  win.style.display = done===total?'block':'none';
+}
+
+// AVOID
+function buildAvoid() {
+  const container = document.getElementById('accordions');
+  Object.entries(AVOID_DATA).forEach(([cat, items]) => {
+    const wrap = document.createElement('div');
+    const hd = document.createElement('div');
+    hd.className = 'acc-hd';
+    const isHighlighted = cat.includes('KEY for BP');
+    hd.innerHTML = `<div class="acc-title" style="${isHighlighted?'color:#c0392b':''}"><span style="font-size:16px">${['🌾','🍬','🧂','🥫'][Object.keys(AVOID_DATA).indexOf(cat)]||'📋'}</span><span>${cat}</span><span class="badge ${isHighlighted?'badge-red':'badge-red'}">${items.length}</span></div><span style="color:#aaa;font-size:13px" class="arr">▼</span>`;
+    const body = document.createElement('div');
+    body.className = 'acc-body';
+    let html = `<div class="hdr-labels"><span style="font-size:11px;font-weight:800;color:#c0392b;text-transform:uppercase">❌ Avoid</span><span></span><span style="font-size:11px;font-weight:800;color:#2e7d45;text-transform:uppercase">✅ Replace With</span></div>`;
+    items.forEach(item => {
+      html += `<div class="avoid-grid"><div class="abadx">${item.bad}</div><div class="aarr">→</div><div class="agood">${item.good}</div></div>`;
+    });
+    body.innerHTML = html;
+    hd.onclick = () => {
+      const open = body.classList.contains('open');
+      document.querySelectorAll('.acc-body').forEach(b=>b.classList.remove('open'));
+      document.querySelectorAll('.arr').forEach(a=>a.textContent='▼');
+      if(!open){body.classList.add('open');hd.querySelector('.arr').textContent='▲';}
+    };
+    wrap.appendChild(hd); wrap.appendChild(body); container.appendChild(wrap);
+  });
+  const spiceEl = document.getElementById('spiceTags');
+  GOOD_SPICES.forEach(s => {
+    const span = document.createElement('span');
+    span.className = 'spice-tag'; span.textContent = s;
+    spiceEl.appendChild(span);
+  });
+}
+
+// DRINKS
+function buildDrinks() {
+  const gEl = document.getElementById('drinkPanelGood');
+  gEl.innerHTML = '<div class="card-title">💧 Recommended Drinks</div>';
+  DRINKS_GOOD.forEach(d => {
+    gEl.innerHTML += `<div class="drink-row"><div class="di">${d.icon}</div><div><div class="dname">${d.name}</div><div class="dnote">${d.note}</div></div></div>`;
+  });
+  const aEl = document.getElementById('drinkPanelAvoid');
+  aEl.innerHTML = '<div class="card-title">❌ Drinks to Avoid</div>';
+  DRINKS_AVOID.forEach(d => {
+    aEl.innerHTML += `<div class="drink-row"><div class="di">${d.icon}</div><div><div class="dname" style="color:#c0392b">${d.name}</div><div class="dnote">${d.note}</div></div></div>`;
+  });
+  const alcEl = document.getElementById('drinkPanelAlcohol');
+  alcEl.innerHTML = `<div class="tip-box-red" style="margin-bottom:12px">${ALCOHOL_NOTE}</div><div class="card"><div class="card-title">🍷 Alcohol Reference Guide</div>`;
+  ALCOHOL_ITEMS.forEach(a => {
+    alcEl.innerHTML += `<div class="alc-row"><div class="alc-top"><span class="alc-name">${a.name}</span><span style="font-size:12px;font-weight:800;color:${a.good?'#b7770d':'#c0392b'}">${a.rating}</span></div><div class="alc-note">${a.note}</div></div>`;
+  });
+  alcEl.innerHTML += '</div>';
+  document.querySelectorAll('[data-dsec]').forEach(btn => {
+    btn.onclick = () => {
+      document.querySelectorAll('[data-dsec]').forEach(b=>b.classList.remove('on'));
+      btn.classList.add('on');
+      const s = btn.dataset.dsec;
+      document.getElementById('drinkPanelGood').style.display  = s==='good'?'block':'none';
+      document.getElementById('drinkPanelAvoid').style.display = s==='avoid'?'block':'none';
+      document.getElementById('drinkPanelAlcohol').style.display= s==='alcohol'?'block':'none';
+    };
+  });
+}
+
+// GROCERY
+function buildGrocery() {
+  const list = document.getElementById('groceryList');
+  Object.entries(GROCERY_DATA).forEach(([cat, items]) => {
+    const catDiv = document.createElement('div');
+    catDiv.className = 'gcat'; catDiv.textContent = cat;
+    list.appendChild(catDiv);
+    items.forEach((item, i) => {
+      const key = cat+'-'+i;
+      const row = document.createElement('div');
+      row.className = 'gitem';
+      row.innerHTML = `<div class="gcheck" id="gc-${key}">${state.grocChecked[key]?TICK_SVG:''}</div><div class="gname${state.grocChecked[key]?' done':''}" id="gn-${key}">${item.n}</div><div class="gstore">${item.s}</div>`;
+      row.onclick = () => toggleGroc(key);
+      list.appendChild(row);
+    });
+  });
+  updateGrocProgress();
+}
+
+window.toggleGroc = function(key) {
+  state.grocChecked[key] = !state.grocChecked[key];
+  const isOn = state.grocChecked[key];
+  const gc = document.getElementById('gc-'+key);
+  const gn = document.getElementById('gn-'+key);
+  if(gc){gc.className='gcheck'+(isOn?' on':'');gc.innerHTML=isOn?TICK_SVG:'';}
+  if(gn){gn.className='gname'+(isOn?' done':'');}
+  updateGrocProgress();
+};
+
+function updateGrocProgress() {
+  const total = Object.values(GROCERY_DATA).reduce((s,a)=>s+a.length,0);
+  const done = Object.values(state.grocChecked).filter(Boolean).length;
+  document.getElementById('grocCount').textContent = done+'/'+total+' items';
+  document.getElementById('grocFill').style.width = total?Math.round((done/total)*100)+'%':'0%';
+}
+
+// RESTAURANTS
+function buildRestaurants() {
+  const list = document.getElementById('restaurantList');
+  RESTAURANTS_DATA.forEach(r => {
+    list.innerHTML += `<div class="rrow"><div class="rico" style="background:${r.col}">${r.icon}</div><div style="flex:1"><div class="rname">${r.name}</div><div class="rloc">📍 ${r.loc}</div><div class="rtip">${r.tip}</div></div></div>`;
+  });
+}
+
+// INIT
+buildDaySel();
+renderMeals();
+buildAvoid();
+buildDrinks();
+buildGrocery();
+buildRestaurants();
+</script>
+</body>
+</html>
